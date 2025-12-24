@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:k6": "node tests/LoadTests/invoke/build.mjs",
+    "run:k6:baseline": "npm run build:k6 && k6 run tests/LoadTests/dist/invoke.baseline.js",
+    "run:k6:baseline:html": "npm run build:k6 && k6 run --compatibility-mode=extended tests/LoadTests/dist/invoke.baseline.js",
+    "run:k6:ramp": "npm run build:k6 && k6 run tests/LoadTests/dist/invoke.ramp.js",
+    "run:k6:ramp:html": "npm run build:k6 && k6 run --compatibility-mode=extended tests/LoadTests/dist/invoke.ramp.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^24.10.1",
     "codeceptjs": "^3.7.5",
+    "esbuild": "^0.27.2",
     "playwright": "^1.56.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
