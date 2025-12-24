@@ -221,7 +221,7 @@ Scenario("TC115 — Tricky: Cost Center Interpretation", async ({ I }) =>
   )
 );
 
-// ---------- COMPLEX ----------
+// COMPLEX
 
 Scenario("TC116 — Invoice Amount Exceeds PO Amount", async ({ I }) =>
   runEvalTest(I, "Identify suppliers whose invoice amount exceeds purchase order amount by more than 10 percent.", "TC116")
@@ -283,7 +283,7 @@ Scenario("TC130 — Increasing Supplier Invoice Amount Trend", async ({ I }) =>
   runEvalTest(I, "Identify suppliers whose average invoice amount has increased consistently over the last three months.", "TC130")
 );
 
-// ---------- EDGE CASES ----------
+// EDGE CASES
 
 Scenario("TC131 — Missing Invoice Dates", async ({ I }) =>
   runEvalTest(I, "List invoices with missing invoice date or accounting date.", "TC131")
@@ -345,7 +345,7 @@ Scenario("TC145 — Duplicate Extra Invoice Keys", async ({ I }) =>
   runEvalTest(I, "Identify invoices with duplicate extra invoice keys.", "TC145")
 );
 
-// ---------- FUZZY --------
+// FUZZY
 
 Scenario("TC146 — Highest Paid Suppliers (Fuzzy)", async ({ I }) =>
   runEvalTest(I, "Who are we paying the most these days?", "TC146")
