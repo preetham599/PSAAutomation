@@ -39,7 +39,7 @@ After(async () => {
   }
   generatedColumns.length = 0;
 });
-/*
+
 // Single column language enrichment
 Scenario("Verify single column language enrichment", async () => {
   // Ensure workspace data page is fully loaded
@@ -168,7 +168,7 @@ Scenario("Verify web scraping enrichment - target column displayed", async () =>
     20
   );
 });
-*/
+
 Scenario("Verify currency convertor - target column displayed", async () => {
   // Open enrichment panel
   I.waitForVisible(enrichmentPage.btnEnrichment(), 30);
