@@ -8,7 +8,14 @@
     "run:k6:baseline": "npm run build:k6 && k6 run tests/LoadTests/dist/invoke.baseline.js",
     "run:k6:baseline:html": "npm run build:k6 && k6 run --compatibility-mode=extended tests/LoadTests/dist/invoke.baseline.js",
     "run:k6:ramp": "npm run build:k6 && k6 run tests/LoadTests/dist/invoke.ramp.js",
-    "run:k6:ramp:html": "npm run build:k6 && k6 run --compatibility-mode=extended tests/LoadTests/dist/invoke.ramp.js"
+    "run:k6:ramp:html": "npm run build:k6 && k6 run --compatibility-mode=extended tests/LoadTests/dist/invoke.ramp.js",
+    "run:k6:currency": "k6 run tests/LoadTests/enrich/currency.baseline.js",
+    "run:k6:currency:html": "k6 run tests/LoadTests/enrich/currency.baseline.js --summary-export=currency-summary.json",
+    "run:k6:currency:ramp": "k6 run tests/LoadTests/enrich/currency.ramp.js",
+    "run:k6:currency:ramp:html": "k6 run tests/LoadTests/enrich/currency.ramp.js --summary-export=currency-ramp-summary.json",
+    "run:k6:language": "k6 run tests/LoadTests/enrich/language.baseline.js",
+    "run:k6:language:html": "k6 run tests/LoadTests/enrich/language.baseline.js",
+    "evals": "codeceptjs run --config codecept.api.conf.ts tests/api/evalsCI_test.ts"
   },
   "keywords": [],
   "author": "",

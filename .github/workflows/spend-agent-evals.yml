@@ -1,0 +1,43 @@
+name: Spend Agent Evals (Langfuse)
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Spend Agent Evals
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+          LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+          LANGFUSE_PROJECT_ID: ${{ secrets.LANGFUSE_PROJECT_ID }}
+
+          MAX_ALLOWED_FAILURES: 3
+          MIN_AVG_SCORE: 8.8
+        run: |
+          npm run evals
+
+      - name: Upload Eval Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spend-agent-eval-report
+          path: eval_report_*.xlsx
