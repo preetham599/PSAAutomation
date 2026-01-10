@@ -136,41 +136,73 @@ Scenario("TC105 — Tricky: Invoice vs Invoice Line", async ({ I }) =>
 AfterSuite(() => {
   const total = evalReport.length;
 
+  // ----------- CLASSIFY FAILURES -----------
+
   const requestFailures = evalReport.filter(r =>
-    ["REQUEST_ERROR", "NO_TRACE", "NO_EVAL_SCORE", "INVALID_RESPONSE"].includes(r.failureType)
+    ["REQUEST_ERROR", "NO_TRACE", "NO_EVAL_SCORE", "INVALID_RESPONSE"].includes(
+      r.failureType
+    )
   );
 
-  const qualityFailures = evalReport.filter(r => r.failureType === "LOW_SCORE");
+  const qualityFailures = evalReport.filter(
+    r => r.failureType === "LOW_SCORE"
+  );
 
   const scored = evalReport.filter(r => typeof r.evalScore === "number");
+
   const avgScore =
-    scored.reduce((s, r) => s + r.evalScore, 0) / (scored.length || 1);
+    scored.length > 0
+      ? scored.reduce((sum, r) => sum + r.evalScore, 0) / scored.length
+      : 0;
 
-  const MAX_REQUEST_FAILURES = Number(process.env.MAX_REQUEST_FAILURES || 0);
-  const MAX_QUALITY_FAILURES = Number(process.env.MAX_ALLOWED_FAILURES || 3);
-  const MIN_AVG_SCORE = Number(process.env.MIN_AVG_SCORE || 8.8);
+  // ----------- THRESHOLDS -----------
 
-  console.log("\n CI EVAL SUMMARY ");
+  const MAX_REQUEST_FAILURES = Number(
+    process.env.MAX_REQUEST_FAILURES || 0
+  );
+  const MAX_QUALITY_FAILURES = Number(
+    process.env.MAX_ALLOWED_FAILURES || 3
+  );
+  const MIN_AVG_SCORE = Number(
+    process.env.MIN_AVG_SCORE || 8.8
+  );
+
+  // ----------- FAILURE CATEGORY -----------
+
+  let failureCategory = "NONE";
+
+  if (requestFailures.length > MAX_REQUEST_FAILURES) {
+    failureCategory = "RELIABILITY_FAILURE";
+  } else if (
+    qualityFailures.length > MAX_QUALITY_FAILURES ||
+    avgScore < MIN_AVG_SCORE
+  ) {
+    failureCategory = "QUALITY_FAILURE";
+  }
+
+  // ----------- CI SUMMARY -----------
+
+  console.log("\n========== CI EVAL SUMMARY ==========");
   console.log(`Total Prompts        : ${total}`);
   console.log(`Request Failures     : ${requestFailures.length}`);
   console.log(`Quality Failures     : ${qualityFailures.length}`);
   console.log(`Average Eval Score   : ${avgScore.toFixed(2)}`);
-  console.log("========\n");
+  console.log(`Failure Category     : ${failureCategory}`);
+  console.log("====================================\n");
 
-  const shouldFail =
-    requestFailures.length > MAX_REQUEST_FAILURES ||
-    qualityFailures.length > MAX_QUALITY_FAILURES ||
-    avgScore < MIN_AVG_SCORE;
+  // ----------- CI RESULT -----------
 
-  if (shouldFail) {
-    console.error("CI FAILED: Reliability or Quality Gate Breached");
+  if (failureCategory !== "NONE") {
+    console.error(`CI FAILED: ${failureCategory}`);
     process.exitCode = 1;
   } else {
     console.log("CI PASSED: Reliability & Quality Gates Met");
     process.exitCode = 0;
   }
 
-  /* ========== EXCEL REPORT ========== */
+  // ----------- EXCEL REPORT -----------
+
+  console.log("Generating Excel Eval Report...");
 
   const wsData = evalReport.map(r => ({
     "Test Case": r.testCase,
@@ -181,7 +213,7 @@ AfterSuite(() => {
     "Rows Returned": r.rows,
     "Trace ID": r.traceId,
     "Session ID": r.sessionId,
-    "SQL": r.sql,
+    "SQL Query": r.sql,
     "Time Taken (ms)": r.timeTakenMs,
     "Error": r.error,
     "Trace URL": r.traceUrl || "-"
@@ -191,8 +223,9 @@ AfterSuite(() => {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Eval Results");
 
-  const file = `eval_report_${new Date().toISOString().replace(/[:.]/g, "-")}.xlsx`;
-  XLSX.writeFile(wb, file);
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const filePath = `eval_report_${timestamp}.xlsx`;
 
-  console.log(`Excel report generated: ${file}`);
+  XLSX.writeFile(wb, filePath);
+  console.log(`Excel report saved: ${filePath}`);
 });
