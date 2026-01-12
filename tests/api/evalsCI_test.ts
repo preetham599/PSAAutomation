@@ -182,13 +182,13 @@ AfterSuite(() => {
 
   // ----------- CI SUMMARY -----------
 
-  console.log("\n========== CI EVAL SUMMARY ==========");
+  console.log("\n CI EVAL SUMMARY ");
   console.log(`Total Prompts        : ${total}`);
   console.log(`Request Failures     : ${requestFailures.length}`);
   console.log(`Quality Failures     : ${qualityFailures.length}`);
   console.log(`Average Eval Score   : ${avgScore.toFixed(2)}`);
   console.log(`Failure Category     : ${failureCategory}`);
-  console.log("====================================\n");
+  console.log("\n");
 
   // ----------- CI RESULT -----------
 
