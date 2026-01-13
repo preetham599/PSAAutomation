@@ -164,7 +164,7 @@ AfterSuite(() => {
     process.env.MAX_ALLOWED_FAILURES || 3
   );
   const MIN_AVG_SCORE = Number(
-    process.env.MIN_AVG_SCORE || 8.8
+    process.env.MIN_AVG_SCORE || 9.0
   );
 
   //  FAILURE CATEGORY
