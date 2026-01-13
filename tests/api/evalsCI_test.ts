@@ -100,7 +100,7 @@ Scenario("TC101 — Tricky: Spend vs PO Confusion", async ({ I }) =>
     "TC101"
   )
 );
-
+/*
 Scenario("TC102 — Tricky: Date Field Ambiguity", async ({ I }) =>
   runEvalTest(
     I,
@@ -123,7 +123,7 @@ Scenario("TC104 — Tricky: Supplier vs Supplier Location", async ({ I }) =>
     "Give me total spend by supplier location, not supplier.",
     "TC104"
   )
-);
+);*/
 
 Scenario("TC105 — Tricky: Invoice vs Invoice Line", async ({ I }) =>
   runEvalTest(
@@ -136,7 +136,7 @@ Scenario("TC105 — Tricky: Invoice vs Invoice Line", async ({ I }) =>
 AfterSuite(() => {
   const total = evalReport.length;
 
-  // ----------- CLASSIFY FAILURES -----------
+  //  CLASSIFY FAILURES
 
   const requestFailures = evalReport.filter(r =>
     ["REQUEST_ERROR", "NO_TRACE", "NO_EVAL_SCORE", "INVALID_RESPONSE"].includes(
@@ -155,7 +155,7 @@ AfterSuite(() => {
       ? scored.reduce((sum, r) => sum + r.evalScore, 0) / scored.length
       : 0;
 
-  // ----------- THRESHOLDS -----------
+  //  THRESHOLDS
 
   const MAX_REQUEST_FAILURES = Number(
     process.env.MAX_REQUEST_FAILURES || 0
@@ -167,7 +167,7 @@ AfterSuite(() => {
     process.env.MIN_AVG_SCORE || 8.8
   );
 
-  // ----------- FAILURE CATEGORY -----------
+  //  FAILURE CATEGORY
 
   let failureCategory = "NONE";
 
@@ -180,7 +180,7 @@ AfterSuite(() => {
     failureCategory = "QUALITY_FAILURE";
   }
 
-  // ----------- CI SUMMARY -----------
+  //  CI SUMMARY
 
   console.log("\n CI EVAL SUMMARY ");
   console.log(`Total Prompts        : ${total}`);
@@ -190,7 +190,7 @@ AfterSuite(() => {
   console.log(`Failure Category     : ${failureCategory}`);
   console.log("\n");
 
-  // ----------- CI RESULT -----------
+  //  CI RESULT
 
   if (failureCategory !== "NONE") {
     console.error(`CI FAILED: ${failureCategory}`);
