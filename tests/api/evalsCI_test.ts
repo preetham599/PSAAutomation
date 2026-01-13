@@ -55,7 +55,7 @@ async function runEvalTest(I: CodeceptJS.I, prompt: string, testCaseName: string
 
     const rows = resp.data.result.rows;
     report.rows = Array.isArray(rows) ? rows.length : 0;
-    report.sql = resp.data.result.sql || "-";
+    report.sql = resp.data?.result?.sql || resp.data?.result?.query_object || "NOT RETURNED";
 
     const trace = await waitForTrace(session_id);
     if (!trace?.id) {
@@ -234,7 +234,7 @@ AfterSuite(() => {
 
   const ws = XLSX.utils.json_to_sheet(wsData);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Eval Resultss");
+  XLSX.utils.book_append_sheet(wb, ws, "Eval Results");
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filePath = `eval_report_${timestamp}.xlsx`;
