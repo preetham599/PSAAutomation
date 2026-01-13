@@ -204,7 +204,8 @@ AfterSuite(() => {
 
   console.log("Generating Excel Eval Report...");
 
-  const wsData = evalReport.map(r => ({
+  const wsData = evalReport.map(r => {
+    const row: any = {
     "Test Case": r.testCase,
     "Prompt": r.prompt,
     "Result": r.result,
@@ -217,7 +218,19 @@ AfterSuite(() => {
     "Time Taken (ms)": r.timeTakenMs,
     "Error": r.error,
     "Trace URL": r.traceUrl || "-"
-  }));
+  };
+  // Make Trace URL clickable (same as old setup)
+    if (r.traceUrl && r.traceUrl !== "-") {
+      row["Trace URL"] = {
+        t: "s",
+        f: `HYPERLINK("${r.traceUrl}", "Click to View")`,
+      };
+    } else {
+      row["Trace URL"] = "-";
+    }
+
+    return row;
+  });
 
   const ws = XLSX.utils.json_to_sheet(wsData);
   const wb = XLSX.utils.book_new();
