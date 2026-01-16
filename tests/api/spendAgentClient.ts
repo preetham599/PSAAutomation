@@ -30,22 +30,22 @@ export class SpendAgentClient {
 
     this.client.interceptors.response.use(
       (response) => {
-        console.log("\n================ RESPONSE ================");
+        console.log("\n======= RESPONSE =====");
         console.log("STATUS:", response.status);
         console.log("FROM:", response.config.url);
         console.log("DATA:", JSON.stringify(response.data, null, 2));
-        console.log("==========================================\n");
+        console.log("=======\n");
         return response;
       },
       (error) => {
-        console.log("\n================ ERROR ===================");
+        console.log("\n========= ERROR ========");
         if (error.response) {
           console.log("STATUS:", error.response.status);
           console.log("DATA:", JSON.stringify(error.response.data, null, 2));
         } else {
           console.log("ERROR MESSAGE:", error.message);
         }
-        console.log("==========================================\n");
+        console.log("=========\n");
         return Promise.reject(error);
       }
     );
@@ -64,7 +64,7 @@ export class SpendAgentClient {
     const payload: any = {
       input: {
         query,
-        workspace_id: 1173,
+        workspace_id: 1705,
         user_config: {
           session_id,
           llm_model: "gpt",
